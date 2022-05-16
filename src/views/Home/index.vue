@@ -1,10 +1,16 @@
 <script setup>
-import { onMounted } from '@vue/runtime-core'
+import { defineComponent, onMounted } from '@vue/runtime-core'
 import { useRouter } from 'vue-router'
 import contact from './Contact.vue'
 import customHeader from './CustomHeader.vue'
+import useModal from '../../hooks/useModal'
+
+defineComponent({
+  components: [contact, customHeader, useModal]
+})
 
 const router = useRouter()
+const modal = useModal()
 
 onMounted(() => {
   const token = window.localStorage.getItem('token')
@@ -14,11 +20,15 @@ onMounted(() => {
 })
 
 function handleLogin () {
-  console.log('logged in')
+  modal.open({
+    components: 'ModalLogin'
+  })
 }
 
 function handleAccountCreation () {
-  console.log('account created')
+  modal.open({
+    components: 'ModalCreateAccount'
+  })
 }
 </script>
 
