@@ -4,6 +4,7 @@ import ModalFactory from './components/ModalFactory/index.vue'
 import { useRoute } from 'vue-router'
 import router from './router'
 import services from './services'
+import { setCurrentUser } from './store/user'
 
 defineComponent({
   components: [ModalFactory]
@@ -19,7 +20,7 @@ watch(() => route.path, async () => {
       return
     }
     const { data } = await services.users.getMe()
-    console.log('data: ', data)
+    setCurrentUser(data)
   }
 })
 
