@@ -5,5 +5,12 @@ export default httpClient => ({
       data: response.data,
       errors: response.errors
     }
+  },
+  generateApiKey: async () => {
+    const response = await httpClient.post('/users/me/apikey')
+
+    return {
+      data: response.data
+    }
   }
 })

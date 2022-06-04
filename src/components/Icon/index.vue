@@ -1,9 +1,10 @@
 <script setup>
 import Loading from './Loading.vue'
+import Copy from './Copy.vue'
 import { defineProps, defineComponent } from 'vue'
 
 defineComponent({
-  components: [Loading]
+  components: [Loading, Copy]
 })
 
 defineProps({
@@ -11,10 +12,11 @@ defineProps({
 })
 
 function handleIconToogle (iconName) {
-  console.log(iconName)
   switch (iconName) {
     case 'loading':
       return Loading
+    case 'copy':
+      return Copy
   }
 }
 </script>
