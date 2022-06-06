@@ -26,28 +26,28 @@ function handleLogout () {
     <div class="w-28 lg:w-36 ">
       <img class="w-full" src="../../assets/images/logo_white.png" alt="logo">
     </div>
-  </div>
 
-  <div class="flex">
-    <ul class="flex list-none">
-      <li
-        @click="() => router.push({name: 'Credentials'})"
-        class="px-6 py-2 mr-2 font-bold text-white rounded-full cursor-pointer focus:outline-none"
-      >
-        Credenciais
-      </li>
-      <li
-        @click="() => router.push({name: 'Feedbacks'})"
-        class="px-6 py-2 mr-2 font-bold text-white rounded-full cursor-pointer focus:outline-none"
-      >
-        Feedbacks
-      </li>
-      <li
-        @click="handleLogout"
-        class="px-6 py-2 font-bold bg-white rounded-full cursor-point text-brand-main focus:outline-none"
-      >
-        {{ logoutLabel }}
-      </li>
-    </ul>
+    <div class="flex">
+      <ul class="flex list-none">
+        <li
+          @click="() => router.push({name: 'Credentials'})"
+          class="px-6 py-2 mr-2 font-bold text-white rounded-full cursor-pointer focus:outline-none"
+        >
+          Credenciais
+        </li>
+        <li
+          @click="() => router.push({name: 'Feedbacks'})"
+          class="px-6 py-2 mr-2 font-bold text-white rounded-full cursor-pointer focus:outline-none"
+        >
+          Feedbacks
+        </li>
+        <li
+          @click="handleLogout"
+          class="px-6 py-2 font-bold bg-white rounded-full cursor-point text-brand-main focus:outline-none"
+        >
+          {{ logoutLabel }}
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
