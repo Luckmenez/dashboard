@@ -3,6 +3,7 @@ import router from '../router'
 import { setGlobalLoading } from '../store/global'
 import AuthService from './auth'
 import usersService from './users'
+import feedbacks from './feedbacks'
 
 const APIS_ENVS = {
   local: 'http://localhost:3000',
@@ -49,5 +50,6 @@ httpClient.interceptors.response.use(
 
 export default {
   auth: AuthService(httpClient),
-  users: usersService(httpClient)
+  users: usersService(httpClient),
+  feedbacks: feedbacks(httpClient)
 }
