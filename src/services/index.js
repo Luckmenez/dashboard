@@ -18,6 +18,7 @@ const httpClient = axios.create({
 httpClient.interceptors.request.use(config => {
   setGlobalLoading(true)
   const token = window.localStorage.getItem('token')
+  // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVhYjc1OWY4LWYyMzgtNGZmOS1hZTkxLWVlMTU1ODk4MjMyOSIsImVtYWlsIjoiaWdvckBpZ29yLm1lIiwibmFtZSI6Iklnb3IgSGFsZmVsZCIsImlhdCI6MTYxMDQyNjg4OH0.88S5YLssZhC_TgotUZFDlcw5Cc3xlQTB0mqsQcQu1dY'
   if (token) {
     config.headers.common.Authorization = `Bearer ${token}`
   }
