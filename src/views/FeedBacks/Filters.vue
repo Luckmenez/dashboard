@@ -1,12 +1,11 @@
-<script setup>
-import { onMounted, reactive, defineEmits } from 'vue'
+<script async setup>
+import { reactive, defineEmits } from 'vue'
 import services from '../../services'
-import store from '../../store'
+import useStore from '../../hooks/useStore'
 
 const emit = defineEmits(['select'])
-// import useStore from '../../hooks/useStore'
 
-// const store = useStore('Global')
+const store = useStore('Global')
 const state = reactive({
   hasError: false,
   filters: [
@@ -56,20 +55,14 @@ function handleSelection ({ type }) {
     emit('select', type)
   }
 }
-
-console.log(handleSelection('ok'))
-
-onMounted(async () => {
-  try {
-    const { data } = await services.feedbacks.getSummary()
-    console.log('data: ', data)
-    state.filters = applyFiltersStructure(data)
-  } catch (error) {
-    console.log('erro: ', error)
-    state.hasError = !!error
-    state.filters = applyFiltersStructure({ all: 0, issue: 0, idea: 0, other: 0 })
-  }
-})
+try {
+  const { data } = await services.feedbacks.getSummary()
+  state.filters = applyFiltersStructure(data)
+} catch (error) {
+  console.log('erro: ', error)
+  state.hasError = !!error
+  state.filters = applyFiltersStructure({ all: 0, issue: 0, idea: 0, other: 0 })
+}
 </script>
 
 <template>
@@ -85,7 +78,7 @@ onMounted(async () => {
         :class="{
           'bg-gray-200 bg-opacity-50': filter.active
         }"
-        class="flex items-center justify-between px-4 py-1 rounded cursor-pointer"
+        class="flex justify-between px-4 py-1 rounded cursor-pointer"
         @click="() => handleSelection(filter)"
       >
         <div class="flex items-center">
@@ -93,14 +86,14 @@ onMounted(async () => {
             :class="`bg-${filter.color}`"
             class="inline-block w-2 h-2 mr-2 rounded-full "
           />{{ filter.label }}
-
+        </div>
           <span
             :class="filter.active ? `text-${filter.color}` : 'text-brand-graydark'"
             class="font-bold"
           >
             {{ filter.amount }}
           </span>
-        </div>
+
       </li>
     </ul>
   </div>
