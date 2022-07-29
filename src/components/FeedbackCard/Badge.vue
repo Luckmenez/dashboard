@@ -8,10 +8,10 @@ const props = defineProps({
 const { type } = toRefs(props)
 
 const label = computed(() => {
-  if (type === 'ISSUE') {
+  if (type.value === 'ISSUE') {
     return 'problema'
   }
-  if (type === 'IDEA') {
+  if (type.value === 'IDEA') {
     return 'ideia'
   }
 
@@ -19,10 +19,10 @@ const label = computed(() => {
 })
 
 const clasColor = computed(() => {
-  if (type === 'ISSUE') {
+  if (type.value === 'ISSUE') {
     return 'brand-danger'
   }
-  if (type === 'IDEA') {
+  if (type.value === 'IDEA') {
     return 'brand-warning'
   }
 
@@ -32,7 +32,7 @@ const clasColor = computed(() => {
 
 <template>
   <span
-    :class="`br-${clasColor}`"
+    :class="`bg-${clasColor}`"
     class="p-2 text-xs font-black uppercase rounded-full"
   >
     {{ label }}

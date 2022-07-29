@@ -17,8 +17,6 @@ const brandColors = palette.brand
 const store = useStore()
 const toast = useToast()
 
-// console.log('store', store.User.currentUser)
-
 const state = reactive({
   hasError: false,
   isLoading: false

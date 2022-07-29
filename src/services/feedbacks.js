@@ -8,6 +8,9 @@ export default httpClient => ({
     if (type) {
       query.type = type
     }
+    if (type === 'all') {
+      query.type = ''
+    }
     const response = await httpClient.get('/feedbacks', { params: query })
     return { data: response.data }
   },
@@ -16,7 +19,6 @@ export default httpClient => ({
       method: 'GET',
       url: '/feedbacks/summary'
     })
-    console.log('response: ', response.data)
     return { data: response.data }
   }
 })

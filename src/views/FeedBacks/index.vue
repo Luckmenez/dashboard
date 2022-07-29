@@ -1,5 +1,5 @@
 <script setup>
-import { defineComponent, onMounted, reactive } from 'vue'
+import { defineComponent, onErrorCaptured, onMounted, onUnmounted, reactive } from 'vue'
 import HeaderLogged from '../../components/HeaderLogged'
 import Filters from './Filters.vue'
 import FiltersLoading from './FiltersLoading.vue'
@@ -17,22 +17,24 @@ defineComponent({
   ]
 })
 
-function fazAlgo (event) {
-  console.log(event)
-}
-
 const state = reactive({
   hasError: false,
   isLoading: false,
+  isLoadingFeedbacks: false,
+  isLoadingMoreFeedbacks: false,
   feedbacks: [],
   currentFeedbackType: '',
   pagination: {
     limit: 5,
-    offset: 0
+    offset: 0,
+    total: 0
   }
 })
 
 function handleErrors (error) {
+  state.isLoading = false
+  state.isLoadingFeedbacks = false
+  state.isLoadingMoreFeedbacks = false
   console.log(error)
 }
 
@@ -52,9 +54,63 @@ async function fetchFeedbacks () {
   }
 }
 
+async function changeFeedbacksType (type) {
+  try {
+    state.isLoadingFeedbacks = true
+    state.pagination.limit = 5
+    state.pagination.offset = 0
+    state.currentFeedbackType = type
+
+    const { data } = await services.feedbacks.getAll({
+      type,
+      ...state.pagination
+    })
+    state.feedbacks = data.results
+    state.pagination = data.pagination
+    state.isLoadingFeedbacks = false
+  } catch (error) {
+    handleErrors(error)
+  }
+}
+
+async function handleScroll () {
+  const isBottomOfWindow = Math.ceil(
+    document.documentElement.scrollTop + window.innerHeight
+  ) >= document.documentElement.scrollHeight
+
+  if (state.isLoading || state.isLoadingMoreFeedbacks) return
+  if (!isBottomOfWindow) return
+  if (state.feedbacks.length >= state.pagination.total) return
+
+  try {
+    state.isLoadingMoreFeedbacks = true
+    const { data } = await services.feedbacks.getAll({
+      ...state.pagination,
+      type: state.currentFeedbackType,
+      offset: (state.pagination.offset + 5)
+    })
+
+    if (data.results.length) {
+      state.feedbacks.push(...data.results)
+    }
+
+    state.isLoadingMoreFeedbacks = false
+    state.pagination = data.pagination
+  } catch (error) {
+    handleErrors(error)
+  }
+}
+
 onMounted(() => {
   fetchFeedbacks()
+  window.addEventListener('scroll', handleScroll, false)
 })
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll, false)
+})
+
+onErrorCaptured(handleErrors())
 
 </script>
 
@@ -79,6 +135,7 @@ onMounted(() => {
         <suspense>
           <template #default>
             <Filters
+              @select="changeFeedbacksType($event)"
               class="mt-8 animate__animated animate__fadeIn animate__faster"
             />
           </template>
@@ -94,20 +151,21 @@ onMounted(() => {
           Aconteceu um erro ao carregar os feedbacks 😔
         </p>
         <p
-          v-if="!state.feedbacks.length && !state.isLoading"
+          v-if="!state.feedbacks.length && !state.isLoading && !state.isLoadingFeedbacks && state.hasError"
           class="text-lg text-center text-gray-800 font-regular">
           Ainda nenhum Feedback recebido 🤓
         </p>
 
-        <FeedbackCardLoading v-if="state.isLoading"/>
+        <FeedbackCardLoading v-if="state.isLoading || state.isLoadingFeedbacks"/>
         <FeedbackCard
           v-else
           v-for="(feedback, index) in state.feedbacks"
           :key="feedback.id"
-          :is-opened="index === 0"
+          :isOpened="index === 0"
           :feedback="feedback"
           class="mb-8"
         />
+        <FeedbackCardLoading v-if="state.isLoadingMoreFeedbacks"/>
       </div>
     </div>
   </div>

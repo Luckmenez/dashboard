@@ -36,16 +36,16 @@ function applyFiltersStructure (summary) {
     }
     if (cur === 'all') {
       currentFilter.active = true
+      currentFilter.type = cur
     } else {
       currentFilter.type = cur
     }
-
     return [...acc, currentFilter]
   }, [])
 }
 
 function handleSelection ({ type }) {
-  if (store.isLoading) {
+  if (!store.isLoading) {
     state.filters = state.filters.map(filter => {
       if (filter.type === type) {
         return { ...filter, active: true }

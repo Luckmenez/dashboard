@@ -7,12 +7,12 @@ import feedbacks from './feedbacks'
 
 const APIS_ENVS = {
   local: 'http://localhost:3000',
-  production: '',
+  production: 'https://backend-dashboard-feedbacks-ke27r570k-luckmenez.vercel.app/',
   development: ''
 }
 
 const httpClient = axios.create({
-  baseURL: APIS_ENVS.local
+  baseURL: APIS_ENVS[process.env.NODE_ENV] ?? APIS_ENVS.local
 })
 
 httpClient.interceptors.request.use(config => {
